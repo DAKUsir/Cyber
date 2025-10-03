@@ -262,7 +262,7 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 Chain OUTPUT (policy ACCEPT 18 packets, 2562 bytes)
 num   pkts bytes target     prot opt in     out     source               destination         
-
+```
 # Steganography Demo with Steghide (Kali Linux)
 
 This is a simple demonstration of using **steghide** to hide and extract secret data inside an image file.
