@@ -262,3 +262,79 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 Chain OUTPUT (policy ACCEPT 18 packets, 2562 bytes)
 num   pkts bytes target     prot opt in     out     source               destination         
+
+# Steganography Demo with Steghide (Kali Linux)
+
+This is a simple demonstration of using **steghide** to hide and extract secret data inside an image file.
+
+---
+
+## Steps
+
+### 1. Verify Steghide installation
+```bash
+sudo apt install steghide -y
+```
+Output:
+```
+steghide is already the newest version (0.5.1-15).
+```
+
+### 2. Create a secret text file
+```bash
+echo "This is hidden secret" > secret.txt
+```
+
+### 3. Embed the secret into an image
+```bash
+steghide embed -cf com.jpeg -ef secret.txt
+```
+Output:
+```
+Enter passphrase: 
+Re-Enter passphrase: 
+embedding "secret.txt" in "com.jpeg"... done
+```
+
+### 4. Check information about the image
+```bash
+steghide info com.jpeg
+```
+Output:
+```
+"com.jpeg":
+  format: jpeg
+  capacity: 289.0 Byte
+Try to get information about embedded data ? (y/n) y
+Enter passphrase: 
+  embedded file "secret.txt":
+    size: 22.0 Byte
+    encrypted: rijndael-128, cbc
+    compressed: yes
+```
+
+### 5. Extract the hidden secret
+```bash
+steghide extract -sf com.jpeg
+```
+Output:
+```
+Enter passphrase: 
+the file "secret.txt" does already exist. overwrite ? (y/n) y
+wrote extracted data to "secret.txt".
+```
+
+### 6. Verify the extracted secret
+```bash
+cat secret.txt
+```
+Output:
+```
+This is hidden secret
+```
+
+---
+
+## Summary
+- **secret.txt** was successfully hidden inside **com.jpeg** using `steghide`.
+- The file was later extracted with the same passphrase, proving the concept of steganography.
