@@ -338,7 +338,7 @@ This is hidden secret
 ## Summary
 - **secret.txt** was successfully hidden inside **com.jpeg** using `steghide`.
 - The file was later extracted with the same passphrase, proving the concept of steganography.
-```markdown
+
 # Zphisher Setup and Usage Guide
 
 Zphisher is an open-source phishing toolkit for educational simulations, offering over 30 templates for fake login pages (e.g., Facebook, Instagram, Google). This guide provides steps to set up and run Zphisher on Kali Linux for **ethical, authorized** security training only. **Unauthorized phishing is illegal** under laws like the Computer Fraud and Abuse Act. Always obtain written consent and use isolated networks.
