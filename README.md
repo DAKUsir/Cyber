@@ -99,3 +99,166 @@ Top Secret: The flag is 'K4l1_R0x_47'
 ### Result
 
 The original message is successfully recovered, demonstrating the core principle of symmetric encryption.
+
+# Firewall Demonstration using iptables in Kali Linux
+
+This project demonstrates how to configure a simple firewall in **Kali Linux** using `iptables`.  
+It includes flushing existing rules, setting default policies, allowing essential traffic, blocking IPs, and logging dropped packets — with real terminal outputs.
+
+---
+
+```bash
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -L -v -n --line-numbers
+
+[sudo] password for chauhan: 
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+                                                                         
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -F
+sudo iptables -X
+sudo iptables -t nat -F
+sudo iptables -t nat -X
+sudo iptables -t mangle -F
+sudo iptables -t mangle -X
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -L -v -n --line-numbers
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+                                                                         
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -P OUTPUT ACCEPT
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -L -v -n --line-numbers
+
+Chain INPUT (policy DROP 107 packets, 9770 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 54 packets, 21267 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+                                                                         
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -A INPUT -i lo -j ACCEPT
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -L -v -n --line-numbers
+Chain INPUT (policy DROP 339 packets, 34368 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1        0     0 ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 163 packets, 35995 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+                                                                         
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW -j ACCEPT
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -L -v -n --line-numbers
+Chain INPUT (policy DROP 809 packets, 86390 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1        0     0 ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0           
+2        0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22 ctstate NEW
+3        0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80 ctstate NEW
+4        0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443 ctstate NEW
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 589 packets, 67987 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+                                                                         
+┌──(chauhan㉿Chauhan)-[~]
+└─$ ssh localhost
+ssh: connect to host localhost port 22: Connection refused
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -I INPUT 1 -s 198.51.100.23 -j DROP
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -L -v -n --line-numbers            
+Chain INPUT (policy DROP 1008 packets, 111K bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1        0     0 DROP       all  --  *      *       198.51.100.23        0.0.0.0/0           
+2        2   100 ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0           
+3        0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22 ctstate NEW
+4        0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80 ctstate NEW
+5        0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443 ctstate NEW
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 780 packets, 82601 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -N LOGDROP             
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -A LOGDROP -m limit --limit 5/min -j LOG --log-prefix "IPTables-Dropped:" --log-level 4
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -A LOGDROP -j DROP
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -A INPUT -j LOGDROP
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo journalctl -k -f            
+Oct 04 01:32:01 Chauhan kernel: RPC: Registered udp transport module.
+Oct 04 01:32:01 Chauhan kernel: RPC: Registered tcp transport module.
+Oct 04 01:34:00 Chauhan kernel: UDF-fs: warning (device sr0): udf_load_vrs: No VRS found                                                                  
+Oct 04 01:34:00 Chauhan kernel: ISO 9660 Extensions: Microsoft Joliet Level 3
+Oct 04 01:34:00 Chauhan kernel: ISO 9660 Extensions: RRIP_1991A
+^C
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ curl -l https://www.google.com
+curl: (6) Could not resolve host: www.google.com
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -F                     
+sudo iptables -X
+sudo iptables -t nat -F
+sudo iptables -t mangle -F
+sudo iptables -P INPUT ACCEPT
+sudo iptables -P FORWARD ACCEPT
+sudo iptables -P OUTPUT ACCEPT
+
+┌──(chauhan㉿Chauhan)-[~]
+└─$ sudo iptables -L -v -n --line-numbers
+Chain INPUT (policy ACCEPT 17 packets, 1900 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 18 packets, 2562 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
