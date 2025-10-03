@@ -1,5 +1,3 @@
-
-````markdown
 # 🔐 OpenSSL File Encryption Demo (AES-256-CBC)
 
 This document demonstrates the execution of a simple symmetric encryption and decryption process using the `openssl` command-line utility on Kali Linux.
@@ -24,7 +22,7 @@ Create a file (`note.txt`) containing a secret message and verify its contents.
 ```bash
 echo "Top Secret: The flag is 'K4l1_R0x_47'" > note.txt
 cat note.txt
-````
+```
 
 #### 1.2. Encrypt File
 
@@ -101,13 +99,3 @@ Top Secret: The flag is 'K4l1_R0x_47'
 ### Result
 
 The original message is successfully recovered, demonstrating the core principle of symmetric encryption.
-
-```
-
-### Key Improvements:
-- Markdown formatting: Ensures proper formatting for headings, code blocks, and lists.
-- Clear sectioning: Makes it easier to follow.
-- Indentation: Better for readability on GitHub.
-
-Now, this should look good when pasted into your GitHub README! Let me know if you'd like any changes.
-```
