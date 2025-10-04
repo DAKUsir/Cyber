@@ -549,4 +549,15 @@ cat other/log_honeypot.txt
 - **License**: PentBox is open-source; check repo for details.
 
 For questions, refer to the PentBox GitHub repo.
-```
+
+#Top 10 Essential Nmap Commands (Bash & Usage)This list contains the 10 most crucial Nmap commands for quick reference and effective network reconnaissance.1. Default Scannmap target-ip
+Use: Performs a standard scan on the top 1,000 most popular TCP ports. This is the simplest and most common starting point for initial target discovery.2. Aggressive Scansudo nmap -A target-ip
+Use: Enables OS detection, service version detection (-sV), default script scan (-sC), and traceroute in one comprehensive, high-detail, but often noisy scan. Requires sudo.3. Stealth Scan (SYN)sudo nmap -sS target-ip
+Use: Executes the TCP SYN "half-open" scan. It is the fastest and most popular scan technique, as it avoids completing the TCP handshake. Requires sudo.4. Scan All Portsnmap -p- target-ip
+Use: Scans all 65,535 TCP ports. Use this when you need absolute confirmation of all open ports, though it is significantly slower than the default scan.5. Specify Custom Portsnmap -p 22,80,443 target-ip
+Use: Focuses the scan exclusively on a custom list or range of ports. This greatly speeds up the scan when you are looking for specific services.6. Service Version Detectionnmap -sV target-ip
+Use: Identifies the precise application and version number of services running on the discovered open ports (e.g., Apache 2.4.41). Crucial for vulnerability assessment.7. Default Script Scannmap -sC target-ip
+Use: Runs a set of safe, pre-written Nmap Scripting Engine (NSE) scripts to gather deeper information, such as web server titles, or to check for anonymous login access.8. Ping Scan Onlynmap -sn 192.168.1.0/24
+Use: Disables port scanning and only checks to see which hosts in a specified network range are currently alive. This is used for quick "host sweep" network mapping.9. No Ping Scan (Force Scan)nmap -Pn target-ip
+Use: Skips the initial host discovery check. This is necessary when a target is protected by a firewall that blocks ICMP (ping) traffic, forcing Nmap to assume the host is online and proceed with port scanning.10. Output All Formatsnmap -oA results target-ip
+Use: Saves the scan results to three files (results.nmap, results.xml, results.gnmap). This is essential for detailed reporting, documentation, and importing data into other analysis tools.
