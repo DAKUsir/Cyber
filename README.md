@@ -458,4 +458,95 @@ Below is an example of Zphisher's terminal output during a simulation:
 
 ## Disclaimer
 Zphisher is for **educational purposes only**. The author and this guide are not responsible for misuse. Always adhere to ethical hacking guidelines.
+
+
+# PentBox Honeypot Setup on Kali Linux
+
+## Overview
+This guide demonstrates how to set up a simple honeypot using **PentBox**, a Ruby-based penetration testing tool. The honeypot acts as a decoy service (default on port 80/HTTP) to detect and log unauthorized access attempts. It's low-interaction, logging IP addresses, ports, and requests without providing real access.
+
+**Purpose**: Monitor intruder tactics for defensive analysis. Suitable for educational or testing environments.
+
+**Requirements**:
+- Kali Linux (tested on 2025.3 or similar).
+- Root access for port binding.
+- Isolated network/VM (e.g., VirtualBox with NAT) to avoid public exposure.
+
+## Installation
+
+1. **Update Kali and Install Dependencies**:
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   sudo apt install ruby-full git -y
+   ```
+
+2. **Clone and Extract PentBox**:
+   The repository contains a compressed archive; extract it to access the tool.
+   ```bash
+   cd ~
+   rm -rf pentbox  # Remove if exists
+   git clone https://github.com/technicaldada/pentbox
+   cd pentbox
+   tar -zxvf pentbox.tar.gz
+   cd pentbox
+   chmod +x pentbox.rb
+   ```
+
+## Usage
+
+1. **Run PentBox**:
+   ```bash
+   sudo ./pentbox.rb
+   ```
+
+2. **Configure the Honeypot**:
+   - In the menu, select `2` (Network Tools) → Enter.
+   - Select `3` (Honeypot) → Enter.
+   - For quick setup: Select `1` (Fast Auto Configuration) → Enter. Activates on port 80 with default log at `other/log_honeypot.txt`.
+   - For custom: Select `2` (Manual Configuration) → Enter, then input port (e.g., 80), warning message (e.g., "Access Denied!"), log path, and beep option (y/n).
+   - Output: "HONEYPOT ACTIVATED ON PORT 80". Keep the terminal open for monitoring.
+
+3. **Allow Port Access**:
+   Ensure the port is open and no conflicts (e.g., stop Apache if running).
+   ```bash
+   sudo systemctl stop apache2
+   sudo ufw allow 80/tcp
+   ```
+
+## Testing
+
+1. **Find Kali IP**:
+   ```bash
+   ip addr show  # Note IP (e.g., 192.168.x.x under eth0/wlan0)
+   ```
+
+2. **Simulate Attack from Another Device**:
+   - On a separate VM/machine: Open browser to `http://<kali_IP>` or run:
+     ```bash
+     nc <kali_IP> 80
+     ```
+   - Expected: Warning message displayed on the tester; alert on Kali terminal: "INTRUSION ATTEMPT DETECTED! from <IP>:<port>" with request details (e.g., GET / HTTP/1.1).
+
+## Viewing Logs
+
+Logs record timestamps, IPs, ports, and full requests.
+```bash
+cat other/log_honeypot.txt
+```
+
+## Troubleshooting
+
+- **Command Not Found**: Ensure extraction (`tar -zxvf`) and `chmod +x pentbox.rb`. Run with `sudo ruby pentbox.rb` if needed.
+- **Port Conflict**: Stop services (`sudo systemctl stop apache2`) or use another port (e.g., 8080) in manual config.
+- **No Alerts**: Test from a different IP (not localhost). Create `other/` dir if missing: `mkdir -p other`.
+- **Firewall**: Check status: `sudo ufw status`. Allow port if blocked.
+- **Alternative Download**: If GitHub fails, use SourceForge: `wget https://sourceforge.net/projects/pentbox/files/pentbox-1.8.tar.gz`, then `tar -xvzf pentbox-1.8.tar.gz && cd pentbox-1.8`.
+
+## Notes
+- **Security**: Use in isolated setups only. Honeypots can attract real attacks.
+- **Limitations**: Low-interaction; for advanced, try Cowrie (`sudo apt install cowrie`).
+- **Persistence**: Run in background: `screen sudo ./pentbox.rb` (detach: Ctrl+A, D; reattach: `screen -r`).
+- **License**: PentBox is open-source; check repo for details.
+
+For questions, refer to the PentBox GitHub repo.
 ```
